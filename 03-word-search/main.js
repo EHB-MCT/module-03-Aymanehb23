@@ -1,56 +1,78 @@
-let container = document.querySelector('#canvas-container');
-
-let characters = [];
-let cols = 60;
-let rows = 40;
-let cellW, cellH;
-
-function setup() {
-    let canvas = createCanvas(container.offsetWidth, container.offsetHeight);
-    canvas.parent(container);
-
-    textFont('Share Tech Mono');
-    textAlign(CENTER, CENTER);
-
-    cellW = width / cols;
-    cellH = height / rows;
-
-    // 2. Initialize Data
-    // Create a loop (rows * cols)
-    // For each item, create an Object: { char: randomChar, x: ..., y: ..., found: false }
-    // Push object to 'characters' array
-
-    // Listen for input changes, call updateSearch() when input changes
-
-}
-
 function draw() {
-    background(255);
+    background(255); // White background
 
-    // 3. Draw the Grid
-    // Loop through characters array
-    // Check if item.found is true -> Fill Black/Bold
-    // Else -> Fill Grey/Normal
-    // Draw text(item.char, item.x, item.y)
+    let cellW = width / cols;
+    let cellH = height / rows;
+
+    // Loop through the sizes
+
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            fill(0, 119, 255);
+            noStroke();
+            let size = sizes[i * j];
+            let x = (i * cellW) / 2;
+            let y = (j * cellH) / 2;
+            circle(i * cellW + cellW / 2, j * cellH + cellW / 2, size);
+            if (size > 25) {
+                fill(255);
+                text(size, x, y);
+            }
+        }
+    }
 }
 
-function updateSearch() {
-    // 4. Implement sequential search
+function resetData() {
+    //generate sizes
+    sizes = [];
+    for (let i = 0; i < numCircles; i++) {
+        sizes.push(random(10, 100));
+    }
 
-    // First: Reset all characters (set found = false)
+    foundIndex = -1;
+    calculateStats();
+}
 
-    // Get input value
-    let inputVal = this.value.toUpperCase();
-    // Split input value into array of characters
-    let searchChars = inputVal.split('');
-    let lastFoundIndex = -1;
+function findValue() {
+    //get input value
+    //search for value
 
-    // Loop through searchChars
+    //if value not found, alert
+    if (foundIndex == -1) {
+        alert("Value not found!");
+    }
+}
 
-    // Find the matching object index in 'characters' array
-    // Condition: char matches AND index > lastFoundIndex
+function sortUp() {
+    // sort ascending
+    console.log("sorting ascending!");
+    sizes.sort(function (sizeA, sizeB) {
+        if (sizeA > sizeB) {
+            return -1;
+        } else {
+            return 1;
+        }
+    });
+    console.log("sorted array:");
+    console.log(sizes);
+}
 
-    // If found: 
-    // Set update found attribute and update lastFoundIndex
+function sortDown() {
+    // sort descending
+}
 
+function calculateStats() {
+    //use reduce to calculate total
+    let total = sizes.reduce(function (sum, size) {
+        return sum + size;
+    });
+
+    console.log("total:", total);
+
+    //calculate average
+    let average = total / sizes.length;
+    console.log("average:", average);
+
+    //add both to DOM
+    document.querySelector("#total-mass").innerHTML = total;
 }
